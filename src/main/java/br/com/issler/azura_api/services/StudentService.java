@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class StudentService {
     private final IStudentRepository studentRepository;
 
-    public void save(CreateStudentDTO createDTO) throws BadRequestException, Exception {
+    public void save(CreateStudentDTO createDTO) throws Exception {
         // checks if there is already a student with the same email or cpf on database
         StudentEntity student = studentRepository.findByEmailOrCpf(createDTO.getEmail(), createDTO.getCpf()).orElse(null);
 

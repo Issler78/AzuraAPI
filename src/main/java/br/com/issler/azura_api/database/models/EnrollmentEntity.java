@@ -3,7 +3,7 @@ package br.com.issler.azura_api.database.models;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -19,7 +19,7 @@ public class EnrollmentEntity {
     private UUID id;
 
     @Column(name = "enrollment_date", nullable = false)
-    private Date enrollmentDate;
+    private LocalDate enrollmentDate;
 
     @ManyToOne
     @JoinColumn(name = "student_id") // here exists a column referencing the student
