@@ -3,6 +3,8 @@ package br.com.issler.azura_api.database.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -28,4 +30,7 @@ public class StudentEntity {
 
     @Column(nullable = false, unique = true, columnDefinition = "CHAR(11)")
     private String cpf;
+
+    @OneToMany(mappedBy = "student") // here not exists a column, but the "student" field in EnrollmentEntity is a reference to this entity
+    private Set<EnrollmentEntity> enrollments = new HashSet<>();
 }
