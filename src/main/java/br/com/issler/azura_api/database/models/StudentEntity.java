@@ -31,6 +31,6 @@ public class StudentEntity {
     @Column(nullable = false, unique = true, columnDefinition = "CHAR(11)")
     private String cpf;
 
-    @OneToMany(mappedBy = "student") // here not exists a column, but the "student" field in EnrollmentEntity is a reference to this entity
+    @OneToMany(mappedBy = "student")
     private Set<EnrollmentEntity> enrollments = new HashSet<>();
 }
