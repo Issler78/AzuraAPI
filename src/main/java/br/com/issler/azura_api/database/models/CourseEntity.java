@@ -18,7 +18,6 @@ public class CourseEntity {
     @Column(nullable = false, unique = true)
     private String title;
 
-    @Lob
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
