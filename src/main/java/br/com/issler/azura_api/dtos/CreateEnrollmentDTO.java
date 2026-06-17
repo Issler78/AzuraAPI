@@ -13,9 +13,9 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class CreateEnrollmentDTO {
-    @NotNull(message = "studentId field cannot be null")
-    private UUID studentId;
+    @NotNull()
+    private UUID userId;
 
-    @NotNull(message = "enrollmentDate field cannot be null")
+    @NotNull()
     private LocalDate enrollmentDate;
 }

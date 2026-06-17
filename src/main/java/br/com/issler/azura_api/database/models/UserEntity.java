@@ -8,13 +8,13 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "students")
+@Table(name = "users")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class StudentEntity {
+public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -31,6 +31,6 @@ public class StudentEntity {
     @Column(nullable = false, unique = true, columnDefinition = "CHAR(11)")
     private String cpf;
 
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "user")
     private Set<EnrollmentEntity> enrollments = new HashSet<>();
 }

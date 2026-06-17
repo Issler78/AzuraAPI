@@ -22,6 +22,6 @@ public class EnrollmentEntity {
     private LocalDate enrollmentDate;
 
     @ManyToOne
-    @JoinColumn(name = "student_id", nullable = false)
-    private StudentEntity student;
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user;
 }

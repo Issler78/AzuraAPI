@@ -10,7 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CreateStudentDTO {
+public class CreateUserDTO {
     @NotBlank
     @Size(max = 150)
     private String name;
