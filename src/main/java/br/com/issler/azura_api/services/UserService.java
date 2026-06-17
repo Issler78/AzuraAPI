@@ -1,11 +1,16 @@
 package br.com.issler.azura_api.services;
 
+import br.com.issler.azura_api.database.models.EnrollmentEntity;
 import br.com.issler.azura_api.database.models.UserEntity;
 import br.com.issler.azura_api.database.repositories.IUserRepository;
 import br.com.issler.azura_api.dtos.CreateUserDTO;
 import br.com.issler.azura_api.exceptions.BadRequestException;
+import br.com.issler.azura_api.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Set;
+import java.util.UUID;
 
 
 @Service
@@ -31,5 +36,12 @@ public class UserService {
         } catch (Exception e) {
             throw new Exception("Error occurred while saving user on database");
         }
+    }
+
+    public Set<EnrollmentEntity> getEnrollments(UUID userId) throws Exception {
+        UserEntity user = userRepository.findById(userId).
+                orElseThrow(() -> new NotFoundException("User not found"));
+
+        return user.getEnrollments();
     }
 }

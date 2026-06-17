@@ -1,5 +1,6 @@
 package br.com.issler.azura_api.database.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,5 +33,6 @@ public class UserEntity {
     private String cpf;
 
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference
     private Set<EnrollmentEntity> enrollments = new HashSet<>();
 }
