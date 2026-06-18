@@ -18,4 +18,7 @@ public class CreateEnrollmentDTO {
 
     @NotNull()
     private LocalDate enrollmentDate;
+
+    @NotNull
+    private Long courseId;
 }
