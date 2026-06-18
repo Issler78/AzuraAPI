@@ -1,7 +1,5 @@
 package br.com.issler.azura_api.database.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,9 +26,8 @@ public class CourseEntity {
 
     @ManyToOne()
     @JoinColumn(name = "category_id", nullable = false)
-    private CategoryEntity categoryId;
+    private CategoryEntity category;
 
     @OneToMany(mappedBy = "course")
-    @JsonBackReference // temp
     private Set<EnrollmentEntity> enrollments = new HashSet<>();
 }

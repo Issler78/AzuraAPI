@@ -30,7 +30,7 @@ public class CourseService {
             courseRepository.save(CourseEntity.builder()
                     .title(createCourseDTO.getTitle())
                     .description(createCourseDTO.getDescription())
-                    .categoryId(category)
+                    .category(category)
                     .build());
         } catch (Exception e) {
             throw new Exception("Error occurred while saving course on database");
