@@ -1,0 +1,46 @@
+package br.com.issler.azura_api.services;
+
+import br.com.issler.azura_api.database.models.RoleEntity;
+import br.com.issler.azura_api.database.models.UserEntity;
+import br.com.issler.azura_api.database.repositories.IRoleRepository;
+import br.com.issler.azura_api.database.repositories.IUserRepository;
+import br.com.issler.azura_api.dtos.RegisterDTO;
+import br.com.issler.azura_api.enums.RoleTypeEnum;
+import br.com.issler.azura_api.exceptions.BadRequestException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.HashSet;
+import java.util.Set;
+
+@Service
+@RequiredArgsConstructor
+public class AuthService {
+    private final IUserRepository userRepository;
+    private final IRoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public void register(RegisterDTO registerDTO) throws Exception {
+        UserEntity user = userRepository.findByEmailOrCpf(registerDTO.email(), registerDTO.cpf()).orElse(null);
+
+        if (user != null){
+            throw new BadRequestException("CPF or E-mail already exists");
+        }
+
+        RoleEntity role = roleRepository.findByName(RoleTypeEnum.ROLE_STUDENT.name())
+                .orElseThrow(() -> new Exception("Role not found"));
+
+        try {
+            userRepository.save(UserEntity.builder()
+                    .name(registerDTO.name())
+                    .email(registerDTO.email())
+                    .password(passwordEncoder.encode(registerDTO.password()))
+                    .cpf(registerDTO.cpf())
+                    .roles(new HashSet<RoleEntity>(Set.of(role)))
+                    .build());
+        } catch (Exception e) {
+            throw new Exception("Error occurred while saving user on database");
+        }
+    }
+}

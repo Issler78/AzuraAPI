@@ -3,10 +3,8 @@ package br.com.issler.azura_api.controllers;
 import br.com.issler.azura_api.database.models.EnrollmentEntity;
 import br.com.issler.azura_api.dtos.CategoryResponse;
 import br.com.issler.azura_api.dtos.CourseResponse;
-import br.com.issler.azura_api.dtos.CreateUserDTO;
 import br.com.issler.azura_api.dtos.EnrollmentResponse;
 import br.com.issler.azura_api.services.UserService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -22,12 +20,6 @@ import java.util.stream.Collectors;
 @Validated
 public class UserController {
     private final UserService userService;
-
-    @PostMapping()
-    @ResponseStatus(HttpStatus.CREATED)
-    public void create(@Valid @RequestBody CreateUserDTO createDTO) throws Exception {
-        userService.save(createDTO);
-    }
 
     @GetMapping("/{userId}/enrollments")
     @ResponseStatus(HttpStatus.OK)
