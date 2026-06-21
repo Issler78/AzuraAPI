@@ -1,5 +1,6 @@
 package br.com.issler.azura_api.config;
 
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,5 +39,29 @@ public class TokenProvider {
 
     private SecretKey getSecretKey() {
         return Keys.hmacShaKeyFor(key.getBytes());
+    }
+
+
+
+    public boolean isTokenValid(String token) {
+        try {
+            getClaimsFromToken(token);
+
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public String getUsernameFromToken(String token) {
+        return getClaimsFromToken(token).getSubject();
+    }
+
+    private Claims getClaimsFromToken(String token) {
+        return Jwts.parser()
+                .verifyWith(getSecretKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 }
