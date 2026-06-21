@@ -5,6 +5,7 @@ import br.com.issler.azura_api.exceptions.ErrorResponse;
 import br.com.issler.azura_api.exceptions.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -42,6 +43,17 @@ public class GlobalExceptionsHandler {
                 .build();
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    // security
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException e) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .message(e.getMessage())
+                .status(HttpStatus.FORBIDDEN.value())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
     }
 
     // @Valid argument error
