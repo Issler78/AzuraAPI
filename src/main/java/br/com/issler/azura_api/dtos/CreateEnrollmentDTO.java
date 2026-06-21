@@ -13,12 +13,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class CreateEnrollmentDTO {
-    @NotNull()
-    private UUID userId;
-
-    @NotNull()
-    private LocalDate enrollmentDate;
-
     @NotNull
     private Long courseId;
 }

@@ -11,6 +11,9 @@ import br.com.issler.azura_api.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class EnrollmentService {
@@ -18,17 +21,14 @@ public class EnrollmentService {
     private final IEnrollmentRepository enrollmentRepository;
     private  final ICourseRepository courseRepository;
 
-    public void save(CreateEnrollmentDTO createDTO) throws Exception {
-        UserEntity user = userRepository.findById(createDTO.getUserId())
-                .orElseThrow(() -> new NotFoundException("User not found"));
-
+    public void save(CreateEnrollmentDTO createDTO, UserEntity user) throws Exception {
         CourseEntity course = courseRepository.findById(createDTO.getCourseId())
                 .orElseThrow(() -> new NotFoundException("Course not found"));
 
         try {
             enrollmentRepository.save(EnrollmentEntity.builder()
                     .user(user)
-                    .enrollmentDate(createDTO.getEnrollmentDate())
+                    .enrollmentDate(LocalDate.now())
                     .course(course)
                     .build());
         } catch (Exception e) {
