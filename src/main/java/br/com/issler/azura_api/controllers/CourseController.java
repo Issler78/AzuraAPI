@@ -1,10 +1,7 @@
 package br.com.issler.azura_api.controllers;
 
 import br.com.issler.azura_api.database.models.CourseEntity;
-import br.com.issler.azura_api.dtos.CategoryResponse;
-import br.com.issler.azura_api.dtos.CourseResponse;
-import br.com.issler.azura_api.dtos.CourseUpdateDTO;
-import br.com.issler.azura_api.dtos.CreateCourseDTO;
+import br.com.issler.azura_api.dtos.*;
 import br.com.issler.azura_api.projections.CoursesProjection;
 import br.com.issler.azura_api.services.CourseService;
 import jakarta.validation.Valid;
@@ -29,12 +26,25 @@ public class CourseController {
 
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    public Page<CoursesProjection> getAll(
+    public PageResponse<CoursesProjection> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(defaultValue = "") String search
     ) {
-        return courseService.getAll(page, size, search);
+        Page<CoursesProjection> coursesPage = courseService.getAll(page, size, search);
+
+        return PageResponse.<CoursesProjection>builder()
+                .content(coursesPage.getContent())
+                .page(coursesPage.getNumber())
+                .size(coursesPage.getSize())
+                .elementsInPage(coursesPage.getNumberOfElements())
+                .totalPages(coursesPage.getTotalPages())
+                .totalElements(coursesPage.getTotalElements())
+                .firstPage(coursesPage.isFirst())
+                .lastPage(coursesPage.isLast())
+                .hasPreviousPage(coursesPage.hasPrevious())
+                .hasNextPage(coursesPage.hasNext())
+                .build();
     }
 
     @DeleteMapping("/{courseId}")
