@@ -54,4 +54,12 @@ public class CourseService {
 
         course.setDeletedAt(LocalDateTime.now());
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void restore(Long courseId) throws Exception {
+        CourseEntity course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new NotFoundException("Course not found"));
+
+        course.setDeletedAt(null);
+    }
 }

@@ -48,8 +48,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth.
                         requestMatchers("/v1/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/v1/courses/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/v1/courses/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/v1/courses/**").hasRole("ADMIN")
+                        .requestMatchers("/v1/courses/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/v1/category/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )

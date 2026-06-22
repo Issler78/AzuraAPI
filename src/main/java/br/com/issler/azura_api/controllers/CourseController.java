@@ -39,4 +39,10 @@ public class CourseController {
         courseService.delete(courseId);
     }
 
+    @PatchMapping("/{courseId}/restore")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void restore(@PathVariable Long courseId) throws Exception {
+        courseService.restore(courseId);
+    }
+
 }
