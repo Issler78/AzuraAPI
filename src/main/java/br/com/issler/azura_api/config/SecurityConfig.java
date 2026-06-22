@@ -49,7 +49,7 @@ public class SecurityConfig {
                         requestMatchers("/v1/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/v1/courses/**").permitAll()
                         .requestMatchers("/v1/courses/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/v1/category/**").hasRole("ADMIN")
+                        .requestMatchers("/v1/category/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtSecurityFilter, UsernamePasswordAuthenticationFilter.class)

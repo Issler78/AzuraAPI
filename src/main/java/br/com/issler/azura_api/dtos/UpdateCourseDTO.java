@@ -4,7 +4,7 @@ import lombok.Builder;
 import org.hibernate.validator.constraints.Length;
 
 @Builder
-public record CourseUpdateDTO(
+public record UpdateCourseDTO(
         @Length(max = 255)
         String title,
 

@@ -1,7 +1,7 @@
 package br.com.issler.azura_api.mappers;
 
-import br.com.issler.azura_api.database.models.CourseEntity;
-import br.com.issler.azura_api.dtos.UpdateCourseDTO;
+import br.com.issler.azura_api.database.models.CategoryEntity;
+import br.com.issler.azura_api.dtos.UpdateCategoryDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
@@ -12,6 +12,6 @@ import org.mapstruct.ReportingPolicy;
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
 )
-public interface ICourseMapper {
-    void updateCourse(UpdateCourseDTO updateCourseDTO, @MappingTarget CourseEntity courseEntity);
+public interface ICategoryMapper {
+    void updateCategory(UpdateCategoryDTO updateCategoryDTO, @MappingTarget CategoryEntity category);
 }

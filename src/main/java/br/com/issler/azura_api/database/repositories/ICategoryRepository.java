@@ -10,4 +10,7 @@ import java.util.Optional;
 public interface ICategoryRepository extends CrudRepository<CategoryEntity, Long> {
     @Query("SELECT c FROM CategoryEntity c WHERE c.name = :name")
     Optional<CategoryEntity> findByName(@Param("name") String name);
+
+    // exists a category with the new name and not is the same category
+    boolean existsByNameAndIdNot(String name, Long id);
 }

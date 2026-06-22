@@ -61,8 +61,8 @@ public class CourseController {
 
     @PatchMapping("/{courseId}")
     @ResponseStatus(HttpStatus.OK)
-    public CourseResponse update(@PathVariable Long courseId, @Valid @RequestBody CourseUpdateDTO courseUpdateDTO) throws Exception {
-        CourseEntity course = courseService.update(courseId, courseUpdateDTO);
+    public CourseResponse update(@PathVariable Long courseId, @Valid @RequestBody UpdateCourseDTO updateCourseDTO) throws Exception {
+        CourseEntity course = courseService.update(courseId, updateCourseDTO);
 
         return CourseResponse.builder()
                 .id(course.getId())

@@ -4,7 +4,7 @@ import br.com.issler.azura_api.database.models.CategoryEntity;
 import br.com.issler.azura_api.database.models.CourseEntity;
 import br.com.issler.azura_api.database.repositories.ICategoryRepository;
 import br.com.issler.azura_api.database.repositories.ICourseRepository;
-import br.com.issler.azura_api.dtos.CourseUpdateDTO;
+import br.com.issler.azura_api.dtos.UpdateCourseDTO;
 import br.com.issler.azura_api.dtos.CreateCourseDTO;
 import br.com.issler.azura_api.exceptions.BadRequestException;
 import br.com.issler.azura_api.exceptions.NotFoundException;
@@ -67,12 +67,12 @@ public class CourseService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public CourseEntity update(Long courseId, CourseUpdateDTO courseUpdateDTO) throws Exception {
+    public CourseEntity update(Long courseId, UpdateCourseDTO updateCourseDTO) throws Exception {
         CourseEntity course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new NotFoundException("Course not found"));
 
         try {
-            courseMapper.updateCourse(courseUpdateDTO, course);
+            courseMapper.updateCourse(updateCourseDTO, course);
 
             return course;
         } catch (Exception e) {
