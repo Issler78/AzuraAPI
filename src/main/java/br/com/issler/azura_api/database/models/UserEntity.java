@@ -33,6 +33,7 @@ public class UserEntity implements UserDetails {
 
 
 
+    @Builder.Default
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
@@ -41,6 +42,7 @@ public class UserEntity implements UserDetails {
     )
     private Set<RoleEntity> roles = new HashSet<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<EnrollmentEntity> enrollments = new HashSet<>();
 

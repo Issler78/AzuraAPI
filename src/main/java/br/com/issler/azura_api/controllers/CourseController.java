@@ -1,5 +1,9 @@
 package br.com.issler.azura_api.controllers;
 
+import br.com.issler.azura_api.database.models.CourseEntity;
+import br.com.issler.azura_api.dtos.CategoryResponse;
+import br.com.issler.azura_api.dtos.CourseResponse;
+import br.com.issler.azura_api.dtos.CourseUpdateDTO;
 import br.com.issler.azura_api.dtos.CreateCourseDTO;
 import br.com.issler.azura_api.projections.CoursesProjection;
 import br.com.issler.azura_api.services.CourseService;
@@ -45,4 +49,20 @@ public class CourseController {
         courseService.restore(courseId);
     }
 
+    @PatchMapping("/{courseId}")
+    @ResponseStatus(HttpStatus.OK)
+    public CourseResponse update(@PathVariable Long courseId, @Valid @RequestBody CourseUpdateDTO courseUpdateDTO) throws Exception {
+        CourseEntity course = courseService.update(courseId, courseUpdateDTO);
+
+        return CourseResponse.builder()
+                .id(course.getId())
+                .title(course.getTitle())
+                .description(course.getDescription())
+                .category(CategoryResponse.builder()
+                        .id(course.getCategory().getId())
+                        .name(course.getCategory().getName())
+                        .build()
+                )
+                .build();
+    }
 }
