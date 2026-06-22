@@ -3,6 +3,7 @@ package br.com.issler.azura_api.database.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,6 +28,9 @@ public class CourseEntity {
     @ManyToOne()
     @JoinColumn(name = "category_id", nullable = false)
     private CategoryEntity category;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 
     @OneToMany(mappedBy = "course")
     private Set<EnrollmentEntity> enrollments = new HashSet<>();

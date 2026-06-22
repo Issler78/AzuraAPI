@@ -33,4 +33,10 @@ public class CourseController {
         return courseService.getAll(page, size, search);
     }
 
+    @DeleteMapping("/{courseId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long courseId) throws Exception {
+        courseService.delete(courseId);
+    }
+
 }

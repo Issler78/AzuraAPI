@@ -22,8 +22,8 @@ public interface ICourseRepository extends JpaRepository<CourseEntity, Long> {
         FROM courses c
         INNER JOIN categories cat
         ON c.category_id = cat.id
-        WHERE (:search IS NULL OR :search = ''
-                OR LOWER(c.title) LIKE LOWER(CONCAT('%', :search, '%')))
+        WHERE (:search IS NULL OR :search = '' OR LOWER(c.title) LIKE LOWER(CONCAT('%', :search, '%')))
+        AND c.deleted_at IS NULL
         ORDER BY c.title
     """,
     countQuery = """

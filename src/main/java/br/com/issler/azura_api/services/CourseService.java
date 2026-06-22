@@ -12,6 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -42,5 +45,13 @@ public class CourseService {
 
     public Page<CoursesProjection> getAll(Integer page, Integer size, String search) {
         return courseRepository.getAllPaginate(PageRequest.of(page, size), search);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void delete(Long courseId) throws Exception {
+        CourseEntity course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new NotFoundException("Course not found"));
+
+        course.setDeletedAt(LocalDateTime.now());
     }
 }
