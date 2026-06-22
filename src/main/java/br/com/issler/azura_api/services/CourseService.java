@@ -7,7 +7,10 @@ import br.com.issler.azura_api.database.repositories.ICourseRepository;
 import br.com.issler.azura_api.dtos.CreateCourseDTO;
 import br.com.issler.azura_api.exceptions.BadRequestException;
 import br.com.issler.azura_api.exceptions.NotFoundException;
+import br.com.issler.azura_api.projections.CoursesProjection;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -35,5 +38,9 @@ public class CourseService {
         } catch (Exception e) {
             throw new Exception("Error occurred while saving course on database");
         }
+    }
+
+    public Page<CoursesProjection> getAll(Integer page, Integer size, String search) {
+        return courseRepository.getAllPaginate(PageRequest.of(page, size), search);
     }
 }
