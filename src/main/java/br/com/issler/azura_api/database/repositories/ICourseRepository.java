@@ -1,7 +1,7 @@
 package br.com.issler.azura_api.database.repositories;
 
 import br.com.issler.azura_api.database.models.CourseEntity;
-import br.com.issler.azura_api.projections.CoursesProjection;
+import br.com.issler.azura_api.projections.ICoursesProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -31,5 +31,5 @@ public interface ICourseRepository extends JpaRepository<CourseEntity, Long> {
             COUNT(*)
         FROM courses c
     """)
-    Page<CoursesProjection> getAllPaginate(Pageable pageable, @Param("search") String search);
+    Page<ICoursesProjection> getAllPaginate(Pageable pageable, @Param("search") String search);
 }

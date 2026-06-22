@@ -1,15 +1,11 @@
 package br.com.issler.azura_api.dtos;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.Builder;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
+
 @Builder
-public class CreateCategoryDTO {
-    @NotBlank
-    private String name;
-}
+public record CreateCategoryDTO (
+        @NotBlank
+        String name
+) {}

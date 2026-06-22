@@ -9,7 +9,7 @@ import br.com.issler.azura_api.dtos.CreateCourseDTO;
 import br.com.issler.azura_api.exceptions.BadRequestException;
 import br.com.issler.azura_api.exceptions.NotFoundException;
 import br.com.issler.azura_api.mappers.ICourseMapper;
-import br.com.issler.azura_api.projections.CoursesProjection;
+import br.com.issler.azura_api.projections.ICoursesProjection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -46,7 +46,7 @@ public class CourseService {
         }
     }
 
-    public Page<CoursesProjection> getAll(Integer page, Integer size, String search) {
+    public Page<ICoursesProjection> getAll(Integer page, Integer size, String search) {
         return courseRepository.getAllPaginate(PageRequest.of(page, size), search);
     }
 

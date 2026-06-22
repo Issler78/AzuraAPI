@@ -1,6 +1,6 @@
 package br.com.issler.azura_api.projections;
 
-public interface CoursesProjection {
+public interface ICoursesProjection {
     Long getCourseId();
     String getCourseTitle();
     Long getCategoryId();

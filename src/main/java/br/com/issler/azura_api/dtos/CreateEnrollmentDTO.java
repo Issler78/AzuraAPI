@@ -1,18 +1,10 @@
 package br.com.issler.azura_api.dtos;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.Builder;
 
-import java.time.LocalDate;
-import java.util.UUID;
-
-@Getter
-@Setter
-@ToString
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-public class CreateEnrollmentDTO {
-    @NotNull
-    private Long courseId;
-}
+public record CreateEnrollmentDTO (
+        @NotNull
+        Long courseId
+) {}
