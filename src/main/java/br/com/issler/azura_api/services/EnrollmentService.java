@@ -17,12 +17,11 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class EnrollmentService {
-    private final IUserRepository userRepository;
     private final IEnrollmentRepository enrollmentRepository;
     private  final ICourseRepository courseRepository;
 
     public void save(CreateEnrollmentDTO createDTO, UserEntity user) throws Exception {
-        CourseEntity course = courseRepository.findById(createDTO.getCourseId())
+        CourseEntity course = courseRepository.findById(createDTO.courseId())
                 .orElseThrow(() -> new NotFoundException("Course not found"));
 
         try {

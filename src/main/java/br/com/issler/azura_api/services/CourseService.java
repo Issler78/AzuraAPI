@@ -26,10 +26,10 @@ public class CourseService {
     private final ICourseMapper courseMapper;
 
     public void save(CreateCourseDTO createCourseDTO) throws Exception {
-        CategoryEntity category = categoryRepository.findById(createCourseDTO.getCategoryId())
+        CategoryEntity category = categoryRepository.findById(createCourseDTO.categoryId())
                 .orElseThrow(() -> new NotFoundException("Category not found"));
 
-        CourseEntity course = courseRepository.findByTitle(createCourseDTO.getTitle()).orElse(null);
+        CourseEntity course = courseRepository.findByTitle(createCourseDTO.title()).orElse(null);
         if (course != null) {
             throw new BadRequestException("Course already exists");
         }
@@ -37,8 +37,8 @@ public class CourseService {
 
         try {
             courseRepository.save(CourseEntity.builder()
-                    .title(createCourseDTO.getTitle())
-                    .description(createCourseDTO.getDescription())
+                    .title(createCourseDTO.title())
+                    .description(createCourseDTO.description())
                     .category(category)
                     .build());
         } catch (Exception e) {

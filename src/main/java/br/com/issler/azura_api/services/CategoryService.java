@@ -13,7 +13,7 @@ public class CategoryService {
     private final ICategoryRepository categoryRepository;
 
     public void save(CreateCategoryDTO createCategoryDTO) throws Exception {
-        CategoryEntity category = categoryRepository.findByName(createCategoryDTO.getName())
+        CategoryEntity category = categoryRepository.findByName(createCategoryDTO.name())
                 .orElse(null);
 
         if (category != null) {
@@ -23,7 +23,7 @@ public class CategoryService {
 
         try {
             categoryRepository.save(CategoryEntity.builder()
-                    .name(createCategoryDTO.getName())
+                    .name(createCategoryDTO.name())
                     .build());
         } catch (Exception e) {
             throw new Exception("Error occurred while saving category on database");
