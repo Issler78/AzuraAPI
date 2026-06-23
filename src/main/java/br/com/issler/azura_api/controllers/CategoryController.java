@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/category")
@@ -22,6 +24,18 @@ public class CategoryController {
     @ResponseStatus(HttpStatus.CREATED)
     public void save(@Valid @RequestBody CreateCategoryDTO categoryDTO) throws Exception {
         categoryService.save(categoryDTO);
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<CategoryResponse> getAll() {
+        List<CategoryEntity> categories = categoryService.getAll();
+
+        return categories.stream().map(category -> CategoryResponse.builder()
+                .id(category.getId())
+                .name(category.getName())
+                .build()
+        ).toList();
     }
 
     @PatchMapping("/{categoryId}")

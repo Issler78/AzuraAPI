@@ -10,12 +10,11 @@ import br.com.issler.azura_api.exceptions.CategoryInUseException;
 import br.com.issler.azura_api.exceptions.NotFoundException;
 import br.com.issler.azura_api.mappers.ICategoryMapper;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +39,10 @@ public class CategoryService {
         } catch (Exception e) {
             throw new Exception("Error occurred while saving category on database");
         }
+    }
+
+    public List<CategoryEntity> getAll() {
+        return categoryRepository.findAllByDeletedAtIsNull();
     }
 
     @Transactional(rollbackFor = Exception.class)
