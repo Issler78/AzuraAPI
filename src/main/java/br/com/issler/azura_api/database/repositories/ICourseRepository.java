@@ -32,4 +32,6 @@ public interface ICourseRepository extends JpaRepository<CourseEntity, Long> {
         FROM courses c
     """)
     Page<ICoursesProjection> getAllPaginate(Pageable pageable, @Param("search") String search);
+
+    boolean existsByCategoryIdAndDeletedAtIsNull(Long categoryId);
 }

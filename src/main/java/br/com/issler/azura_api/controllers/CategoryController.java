@@ -34,4 +34,16 @@ public class CategoryController {
                 .name(category.getName())
                 .build();
     }
+
+    @DeleteMapping("/{categoryId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long categoryId) throws Exception {
+        categoryService.delete(categoryId);
+    }
+
+    @PatchMapping("/{categoryId}/restore")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void restore(@PathVariable Long categoryId) throws Exception {
+        categoryService.restore(categoryId);
+    }
 }

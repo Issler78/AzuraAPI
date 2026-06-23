@@ -1,8 +1,10 @@
 package br.com.issler.azura_api.handlers;
 
 import br.com.issler.azura_api.exceptions.BadRequestException;
+import br.com.issler.azura_api.exceptions.CategoryInUseException;
 import br.com.issler.azura_api.exceptions.ErrorResponse;
 import br.com.issler.azura_api.exceptions.NotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -65,6 +67,16 @@ public class GlobalExceptionsHandler {
                 .build();
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler(CategoryInUseException.class)
+    public ResponseEntity<ErrorResponse> handleCategoryInUseException(CategoryInUseException e) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .message(e.getMessage())
+                .status(HttpStatus.CONFLICT.value())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
     }
 
 }

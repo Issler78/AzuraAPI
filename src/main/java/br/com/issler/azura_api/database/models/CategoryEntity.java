@@ -3,6 +3,8 @@ package br.com.issler.azura_api.database.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "categories")
 @AllArgsConstructor
@@ -17,4 +19,7 @@ public class CategoryEntity {
 
     @Column(nullable = false, unique = true, length = 100)
     private String name;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 }
