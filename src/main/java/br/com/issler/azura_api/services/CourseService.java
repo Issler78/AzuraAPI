@@ -63,6 +63,8 @@ public class CourseService {
         CourseEntity course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new NotFoundException("Course not found"));
 
+        if (!categoryRepository.existsByIdAndDeletedAtIsNull(course.getCategory().getId())) throw new NotFoundException("Category not found/inactive");
+
         course.setDeletedAt(null);
     }
 
