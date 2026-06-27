@@ -68,6 +68,7 @@ public class CourseController {
                 .id(course.getId())
                 .title(course.getTitle())
                 .description(course.getDescription())
+                .price(course.getPrice())
                 .category(CategoryResponse.builder()
                         .id(course.getCategory().getId())
                         .name(course.getCategory().getName())

@@ -1,9 +1,11 @@
 package br.com.issler.azura_api.database.models;
 
+import br.com.issler.azura_api.enums.EnrollmentStatusTypeEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -20,6 +22,24 @@ public class EnrollmentEntity {
 
     @Column(name = "enrollment_date", nullable = false)
     private LocalDate enrollmentDate;
+
+    @Column(name = "completion_date")
+    private LocalDate completionDate;
+
+    @Enumerated(EnumType.STRING)
+    private EnrollmentStatusTypeEnum status = EnrollmentStatusTypeEnum.PENDING_PAYMENT;
+
+    @Column(name = "status_updated_at")
+    private LocalDateTime statusUpdatedAt;
+
+    @Column(name = "price", nullable = false)
+    private Double price = 0.00;
+
+    @Column(name = "completion_percentage", nullable = false)
+    private int completionPercentage = 0;
+
+    @Column(name = "certificate_issued", nullable = false)
+    boolean certificateIssued = false;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

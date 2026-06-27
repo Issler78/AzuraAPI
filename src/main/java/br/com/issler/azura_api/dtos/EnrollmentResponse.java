@@ -9,5 +9,8 @@ import java.util.UUID;
 public record EnrollmentResponse(
         UUID id,
         LocalDate enrollmentDate,
+        LocalDate completionDate,
+        int completionPercentage,
+        boolean certificateIssued,
         CourseResponse course
 ) {}

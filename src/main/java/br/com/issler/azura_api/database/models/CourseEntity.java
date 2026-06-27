@@ -25,6 +25,9 @@ public class CourseEntity {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
+    @Column(name = "price", nullable = false)
+    private Double price = 0.00;
+
     @ManyToOne()
     @JoinColumn(name = "category_id", nullable = false)
     private CategoryEntity category;

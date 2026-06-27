@@ -15,5 +15,8 @@ public record CreateCourseDTO (
         String description,
 
         @NotNull
-        Long categoryId
+        Long categoryId,
+
+        @NotNull
+        Double price
 ) {}

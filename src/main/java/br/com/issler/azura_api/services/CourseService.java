@@ -40,6 +40,7 @@ public class CourseService {
                     .title(createCourseDTO.title())
                     .description(createCourseDTO.description())
                     .category(category)
+                    .price(createCourseDTO.price())
                     .build());
         } catch (Exception e) {
             throw new Exception("Error occurred while saving course on database");
@@ -73,12 +74,8 @@ public class CourseService {
         CourseEntity course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new NotFoundException("Course not found"));
 
-        try {
-            courseMapper.updateCourse(updateCourseDTO, course);
+        courseMapper.updateCourse(updateCourseDTO, course);
 
-            return course;
-        } catch (Exception e) {
-            throw new Exception("Error occurred while updating course on database");
-        }
+        return course;
     }
 }

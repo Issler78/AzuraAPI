@@ -7,5 +7,6 @@ public record CourseResponse(
         Long id,
         String title,
         String description,
+        Double price,
         CategoryResponse category
 ) {}

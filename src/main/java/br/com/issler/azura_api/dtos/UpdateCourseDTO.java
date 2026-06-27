@@ -10,5 +10,7 @@ public record UpdateCourseDTO(
 
         String description,
 
-        Long categoryId
+        Long categoryId,
+
+        Double price
 ) {}

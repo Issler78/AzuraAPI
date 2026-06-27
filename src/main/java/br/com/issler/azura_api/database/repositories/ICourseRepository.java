@@ -17,6 +17,7 @@ public interface ICourseRepository extends JpaRepository<CourseEntity, Long> {
         SELECT
             c.id courseId,
             c.title courseTitle,
+            c.price coursePrice,
             cat.id categoryId,
             cat.name category
         FROM courses c

@@ -29,6 +29,7 @@ public class EnrollmentService {
                     .user(user)
                     .enrollmentDate(LocalDate.now())
                     .course(course)
+                    .price(course.getPrice())
                     .build());
         } catch (Exception e) {
             throw new Exception("Error occured while saving enrollment on database");
