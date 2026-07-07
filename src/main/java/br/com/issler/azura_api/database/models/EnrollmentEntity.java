@@ -4,6 +4,7 @@ import br.com.issler.azura_api.enums.EnrollmentStatusTypeEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -33,7 +34,7 @@ public class EnrollmentEntity {
     private LocalDateTime statusUpdatedAt;
 
     @Column(name = "price", nullable = false)
-    private Double price = 0.00;
+    private BigDecimal price = BigDecimal.ZERO;
 
     @Column(name = "completion_percentage", nullable = false)
     private int completionPercentage = 0;

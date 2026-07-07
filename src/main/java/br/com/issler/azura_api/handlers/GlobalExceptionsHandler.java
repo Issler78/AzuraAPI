@@ -64,6 +64,7 @@ public class GlobalExceptionsHandler {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 // field error + message error
                 .message(Objects.requireNonNull(e.getBindingResult().getFieldError()).getField() + " " + Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage())
+                .status(HttpStatus.BAD_REQUEST.value())
                 .build();
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);

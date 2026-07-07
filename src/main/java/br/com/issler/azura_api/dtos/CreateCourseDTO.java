@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import org.hibernate.validator.constraints.Length;
 
+import java.math.BigDecimal;
+
 @Builder
 public record CreateCourseDTO (
         @NotBlank
@@ -18,5 +20,5 @@ public record CreateCourseDTO (
         Long categoryId,
 
         @NotNull
-        Double price
+        BigDecimal price
 ) {}

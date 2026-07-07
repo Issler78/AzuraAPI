@@ -3,6 +3,7 @@ package br.com.issler.azura_api.database.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,8 +26,8 @@ public class CourseEntity {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "price", nullable = false)
-    private Double price = 0.00;
+    @Column(name = "price", nullable = false, precision = 10, scale = 2)
+    private BigDecimal price = BigDecimal.ZERO;
 
     @ManyToOne()
     @JoinColumn(name = "category_id", nullable = false)
