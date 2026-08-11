@@ -5,8 +5,10 @@ import br.com.issler.azura_api.database.models.PaymentEntity;
 import br.com.issler.azura_api.database.repositories.IPaymentRepository;
 import br.com.issler.azura_api.dtos.CreatePaymentDTO;
 import br.com.issler.azura_api.dtos.PaymentResponse;
+import br.com.issler.azura_api.dtos.WebhookRequest;
 import br.com.issler.azura_api.enums.EnrollmentStatusTypeEnum;
 import br.com.issler.azura_api.enums.PaymentStatusType;
+import br.com.issler.azura_api.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,4 +56,18 @@ public class PaymentService {
         paymentRepository.save(payment);
     }
 
+
+
+    @Transactional
+    public void setAsPayed(WebhookRequest webhookRequest) throws NotFoundException {
+        PaymentEntity payment = paymentRepository.findByGatewayPaymentId(webhookRequest.gatewayPaymentId())
+                .orElseThrow(() -> new NotFoundException("Payment not found"));
+
+        if (webhookRequest.status() == PaymentStatusType.ACCEPTED) {
+            payment.setStatus(PaymentStatusType.ACCEPTED);
+            payment.setPaidAt(webhookRequest.paidAt());
+
+            payment.getEnrollmentId().setStatus(EnrollmentStatusTypeEnum.ACTIVE);
+        }
+    }
 }
