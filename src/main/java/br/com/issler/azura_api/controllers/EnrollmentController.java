@@ -1,8 +1,7 @@
 package br.com.issler.azura_api.controllers;
 
 import br.com.issler.azura_api.database.models.UserEntity;
-import br.com.issler.azura_api.dtos.CreateEnrollmentDTO;
-import br.com.issler.azura_api.exceptions.NotFoundException;
+import br.com.issler.azura_api.dtos.*;
 import br.com.issler.azura_api.services.EnrollmentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +19,28 @@ public class EnrollmentController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void save(
+    public EnrollmentResponse save(
             @Valid @RequestBody CreateEnrollmentDTO createDTO,
             @AuthenticationPrincipal UserEntity user
     ) throws Exception {
-        enrollmentService.save(createDTO, user);
+        EnrollmentCreateResult result = enrollmentService.save(createDTO, user);
+
+        return EnrollmentResponse.builder()
+                .enrollmentDate(result.enrollment().getEnrollmentDate())
+                .enrollmentStatus(result.enrollment().getStatus())
+                .course(CourseResponse.builder()
+                        .title(result.enrollment().getCourse().getTitle())
+                        .price(result.enrollment().getCourse().getPrice())
+                        .category(CategoryResponse.builder()
+                                .name(result.enrollment().getCourse().getCategory().getName())
+                                .build())
+                        .build())
+                .payment(PaymentResponse.builder()
+                        .amount(result.paymentResponse().amount())
+                        .status(result.paymentResponse().status())
+                        .paymentMethod(result.paymentResponse().paymentMethod())
+                        .qrCode(result.paymentResponse().qrCode())
+                        .build())
+                .build();
     }
 }

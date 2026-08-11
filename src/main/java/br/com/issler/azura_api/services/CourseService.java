@@ -78,4 +78,9 @@ public class CourseService {
 
         return course;
     }
+
+    public CourseEntity getById(Long courseId) throws Exception {
+        return courseRepository.findById(courseId)
+                .orElseThrow(() -> new NotFoundException("Course not found"));
+    }
 }

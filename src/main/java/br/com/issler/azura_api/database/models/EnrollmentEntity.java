@@ -27,6 +27,7 @@ public class EnrollmentEntity {
     @Column(name = "completion_date")
     private LocalDate completionDate;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     private EnrollmentStatusTypeEnum status = EnrollmentStatusTypeEnum.PENDING_PAYMENT;
 
