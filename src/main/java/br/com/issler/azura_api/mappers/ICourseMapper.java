@@ -1,7 +1,7 @@
 package br.com.issler.azura_api.mappers;
 
 import br.com.issler.azura_api.database.models.CourseEntity;
-import br.com.issler.azura_api.dtos.UpdateCourseDTO;
+import br.com.issler.azura_api.dtos.course.requests.UpdateCourseDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;

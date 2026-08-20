@@ -1,9 +1,9 @@
 package br.com.issler.azura_api.controllers;
 
 import br.com.issler.azura_api.database.models.CategoryEntity;
-import br.com.issler.azura_api.dtos.CategoryResponse;
-import br.com.issler.azura_api.dtos.CreateCategoryDTO;
-import br.com.issler.azura_api.dtos.UpdateCategoryDTO;
+import br.com.issler.azura_api.dtos.category.responses.CategoryResponse;
+import br.com.issler.azura_api.dtos.category.requests.CreateCategoryDTO;
+import br.com.issler.azura_api.dtos.category.requests.UpdateCategoryDTO;
 import br.com.issler.azura_api.services.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

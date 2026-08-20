@@ -1,8 +1,8 @@
 package br.com.issler.azura_api.controllers;
 
-import br.com.issler.azura_api.dtos.LoginDTO;
-import br.com.issler.azura_api.dtos.RegisterDTO;
-import br.com.issler.azura_api.dtos.TokenResponse;
+import br.com.issler.azura_api.dtos.auth.requests.LoginDTO;
+import br.com.issler.azura_api.dtos.auth.requests.RegisterDTO;
+import br.com.issler.azura_api.dtos.auth.responses.TokenResponse;
 import br.com.issler.azura_api.services.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

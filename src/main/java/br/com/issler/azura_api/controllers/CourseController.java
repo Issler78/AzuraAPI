@@ -2,6 +2,10 @@ package br.com.issler.azura_api.controllers;
 
 import br.com.issler.azura_api.database.models.CourseEntity;
 import br.com.issler.azura_api.dtos.*;
+import br.com.issler.azura_api.dtos.category.responses.CategoryResponse;
+import br.com.issler.azura_api.dtos.course.requests.CreateCourseDTO;
+import br.com.issler.azura_api.dtos.course.requests.UpdateCourseDTO;
+import br.com.issler.azura_api.dtos.course.responses.CourseResponse;
 import br.com.issler.azura_api.projections.ICoursesProjection;
 import br.com.issler.azura_api.services.CourseService;
 import jakarta.validation.Valid;

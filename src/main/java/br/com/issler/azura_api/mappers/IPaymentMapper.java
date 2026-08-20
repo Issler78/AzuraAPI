@@ -1,8 +1,7 @@
 package br.com.issler.azura_api.mappers;
 
-import br.com.issler.azura_api.dtos.GatewayPaymentResponse;
-import br.com.issler.azura_api.dtos.PaymentResponse;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import br.com.issler.azura_api.clients.dtos.responses.GatewayPaymentResponse;
+import br.com.issler.azura_api.dtos.payment.responses.PaymentResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;

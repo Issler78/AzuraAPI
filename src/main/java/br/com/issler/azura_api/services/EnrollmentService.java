@@ -4,11 +4,10 @@ import br.com.issler.azura_api.database.models.CourseEntity;
 import br.com.issler.azura_api.database.models.EnrollmentEntity;
 import br.com.issler.azura_api.database.models.UserEntity;
 import br.com.issler.azura_api.database.repositories.IEnrollmentRepository;
-import br.com.issler.azura_api.dtos.CreateEnrollmentDTO;
-import br.com.issler.azura_api.dtos.CreatePaymentDTO;
-import br.com.issler.azura_api.dtos.EnrollmentCreateResult;
-import br.com.issler.azura_api.dtos.PaymentResponse;
-import br.com.issler.azura_api.exceptions.NotFoundException;
+import br.com.issler.azura_api.dtos.enrollment.requests.CreateEnrollmentDTO;
+import br.com.issler.azura_api.dtos.payment.requests.CreatePaymentDTO;
+import br.com.issler.azura_api.dtos.enrollment.responses.EnrollmentCreateResult;
+import br.com.issler.azura_api.dtos.payment.responses.PaymentResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,7 @@
 package br.com.issler.azura_api.mappers;
 
 import br.com.issler.azura_api.database.models.CategoryEntity;
-import br.com.issler.azura_api.dtos.UpdateCategoryDTO;
+import br.com.issler.azura_api.dtos.category.requests.UpdateCategoryDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;

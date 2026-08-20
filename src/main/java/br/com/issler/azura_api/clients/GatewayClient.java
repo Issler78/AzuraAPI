@@ -1,19 +1,18 @@
 package br.com.issler.azura_api.clients;
 
 import br.com.issler.azura_api.database.models.PaymentEntity;
-import br.com.issler.azura_api.dtos.GatewayPaymentResponse;
-import br.com.issler.azura_api.dtos.GatewayRequestBody;
-import br.com.issler.azura_api.dtos.PaymentResponse;
-import br.com.issler.azura_api.exceptions.GatewayBadRequest;
-import br.com.issler.azura_api.exceptions.GatewayUnavailableException;
-import br.com.issler.azura_api.exceptions.GatewayUnexpectedResponseException;
+import br.com.issler.azura_api.clients.dtos.responses.GatewayPaymentResponse;
+import br.com.issler.azura_api.clients.dtos.requests.GatewayRequestBody;
+import br.com.issler.azura_api.dtos.payment.responses.PaymentResponse;
+import br.com.issler.azura_api.clients.exceptions.GatewayBadRequest;
+import br.com.issler.azura_api.clients.exceptions.GatewayUnavailableException;
+import br.com.issler.azura_api.clients.exceptions.GatewayUnexpectedResponseException;
 import br.com.issler.azura_api.mappers.IPaymentMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 

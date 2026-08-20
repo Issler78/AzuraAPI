@@ -1,7 +1,12 @@
 package br.com.issler.azura_api.controllers;
 
 import br.com.issler.azura_api.database.models.UserEntity;
-import br.com.issler.azura_api.dtos.*;
+import br.com.issler.azura_api.dtos.category.responses.CategoryResponse;
+import br.com.issler.azura_api.dtos.course.responses.CourseResponse;
+import br.com.issler.azura_api.dtos.enrollment.requests.CreateEnrollmentDTO;
+import br.com.issler.azura_api.dtos.enrollment.responses.EnrollmentCreateResult;
+import br.com.issler.azura_api.dtos.enrollment.responses.EnrollmentResponse;
+import br.com.issler.azura_api.dtos.payment.responses.PaymentResponse;
 import br.com.issler.azura_api.services.EnrollmentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

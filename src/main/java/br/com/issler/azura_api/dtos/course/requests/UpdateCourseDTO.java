@@ -1,0 +1,18 @@
+package br.com.issler.azura_api.dtos.course.requests;
+
+import lombok.Builder;
+import org.hibernate.validator.constraints.Length;
+
+import java.math.BigDecimal;
+
+@Builder
+public record UpdateCourseDTO(
+        @Length(max = 255)
+        String title,
+
+        String description,
+
+        Long categoryId,
+
+        BigDecimal price
+) {}

@@ -1,12 +1,12 @@
 package br.com.issler.azura_api.services;
 
-import br.com.issler.azura_api.config.TokenProvider;
+import br.com.issler.azura_api.security.TokenProvider;
 import br.com.issler.azura_api.database.models.RoleEntity;
 import br.com.issler.azura_api.database.models.UserEntity;
 import br.com.issler.azura_api.database.repositories.IRoleRepository;
 import br.com.issler.azura_api.database.repositories.IUserRepository;
-import br.com.issler.azura_api.dtos.LoginDTO;
-import br.com.issler.azura_api.dtos.RegisterDTO;
+import br.com.issler.azura_api.dtos.auth.requests.LoginDTO;
+import br.com.issler.azura_api.dtos.auth.requests.RegisterDTO;
 import br.com.issler.azura_api.enums.RoleTypeEnum;
 import br.com.issler.azura_api.exceptions.BadRequestException;
 import lombok.RequiredArgsConstructor;

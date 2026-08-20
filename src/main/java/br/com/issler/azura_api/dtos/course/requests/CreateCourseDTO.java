@@ -1,0 +1,24 @@
+package br.com.issler.azura_api.dtos.course.requests;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
+import org.hibernate.validator.constraints.Length;
+
+import java.math.BigDecimal;
+
+@Builder
+public record CreateCourseDTO (
+        @NotBlank
+        @Length(max = 255)
+        String title,
+
+        @NotBlank
+        String description,
+
+        @NotNull
+        Long categoryId,
+
+        @NotNull
+        BigDecimal price
+) {}

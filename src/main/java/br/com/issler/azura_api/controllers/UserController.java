@@ -2,9 +2,9 @@ package br.com.issler.azura_api.controllers;
 
 import br.com.issler.azura_api.database.models.EnrollmentEntity;
 import br.com.issler.azura_api.database.models.UserEntity;
-import br.com.issler.azura_api.dtos.CategoryResponse;
-import br.com.issler.azura_api.dtos.CourseResponse;
-import br.com.issler.azura_api.dtos.EnrollmentResponse;
+import br.com.issler.azura_api.dtos.category.responses.CategoryResponse;
+import br.com.issler.azura_api.dtos.course.responses.CourseResponse;
+import br.com.issler.azura_api.dtos.enrollment.responses.EnrollmentResponse;
 import br.com.issler.azura_api.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
