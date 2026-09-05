@@ -1,11 +1,10 @@
 package br.com.issler.azura_api.clients;
 
+import br.com.issler.azura_api.clients.mappers.GatewayErrorMapper;
 import br.com.issler.azura_api.database.models.PaymentEntity;
 import br.com.issler.azura_api.clients.dtos.responses.GatewayPaymentResponse;
 import br.com.issler.azura_api.clients.dtos.requests.GatewayRequestBody;
 import br.com.issler.azura_api.dtos.payment.responses.PaymentResponse;
-import br.com.issler.azura_api.clients.exceptions.GatewayBadRequest;
-import br.com.issler.azura_api.clients.exceptions.GatewayUnavailableException;
 import br.com.issler.azura_api.clients.exceptions.GatewayUnexpectedResponseException;
 import br.com.issler.azura_api.mappers.IPaymentMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,25 +16,35 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 
 import java.net.http.HttpClient;
+import java.time.Duration;
 
 @Component
 public class GatewayClient {
     private final RestClient restClient;
     private final String gatewayKey;
     private final IPaymentMapper paymentMapper;
+    private final GatewayErrorMapper errorMapper;
 
     public GatewayClient(
             @Value("${spring.application.gateway-url}")
             String gatewayUrl,
             @Value("${spring.application.gateway-key}")
             String gatewayKey,
-            IPaymentMapper paymentMapper
+            IPaymentMapper paymentMapper,
+            GatewayErrorMapper errorMapper
     ){
         this.gatewayKey = gatewayKey;
         this.paymentMapper = paymentMapper;
+        this.errorMapper = errorMapper;
 
-        HttpClient client = HttpClient.newBuilder().version(HttpClient.Version.HTTP_1_1).build();
+        HttpClient client = HttpClient.newBuilder()
+                .version(HttpClient.Version.HTTP_1_1)
+                .connectTimeout(Duration.ofSeconds(2))
+                .build();
+
         JdkClientHttpRequestFactory requestFactory = new JdkClientHttpRequestFactory(client);
+        requestFactory.setReadTimeout(Duration.ofSeconds(10));
+
         this.restClient = RestClient.builder()
                 .baseUrl(gatewayUrl)
                 .requestFactory(requestFactory)
@@ -58,19 +67,7 @@ public class GatewayClient {
                     .body(gatewayRequestBody)
                     .retrieve()
                     .onStatus(HttpStatusCode::isError, (request, response) -> {
-                        if(response.getStatusCode().is5xxServerError()){
-                            throw new GatewayUnavailableException("Gateway is unavailable: " + response.getStatusCode().value());
-                        }
-
-                        if(response.getStatusCode().value() == 429){
-                            throw new GatewayUnavailableException("Rate limit exceeded: " + response.getStatusCode().value());
-                        }
-
-                        if(response.getStatusCode().is4xxClientError()){
-                            throw new GatewayBadRequest("Gateway rejected the request: " + response.getBody());
-                        }
-
-                        throw new RuntimeException("Error occurred while sending request to gateway: " + response.getBody());
+                        throw errorMapper.map(response);
                     })
                     .body(GatewayPaymentResponse.class);
 
@@ -81,7 +78,7 @@ public class GatewayClient {
 
             return paymentMapper.toPaymentResponse(result);
         } catch (ResourceAccessException e){
-            throw new GatewayUnavailableException("Failed to communicate with the gateway: " + e.getMessage());
+            throw errorMapper.map(e);
         }
     }
 }
