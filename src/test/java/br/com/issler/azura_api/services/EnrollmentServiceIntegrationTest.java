@@ -43,7 +43,7 @@ class EnrollmentServiceIntegrationTest {
 
     @DynamicPropertySource
     static void properties(DynamicPropertyRegistry registry){
-        registry.add("spring.application.gateway-url", wireMock::baseUrl);
+        registry.add("spring.external.gateway-url", wireMock::baseUrl);
     }
 
     @Autowired

@@ -1,8 +1,11 @@
 spring:
   application:
     api-key: test-api-key
+  external:
     gateway-key: test-gateway-key
     gateway-url: undefined # it should be replaced with the actual URL of the gateway service when running tests.
+    connect-timeout: 500 # ms
+    read-timeout: 1000 # 1s
   datasource:
     url: jdbc:h2:mem:testdb
     driver-class-name: org.h2.Driver

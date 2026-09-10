@@ -26,10 +26,14 @@ public class GatewayClient {
     private final GatewayErrorMapper errorMapper;
 
     public GatewayClient(
-            @Value("${spring.application.gateway-url}")
+            @Value("${spring.external.gateway-url}")
             String gatewayUrl,
-            @Value("${spring.application.gateway-key}")
+            @Value("${spring.external.gateway-key}")
             String gatewayKey,
+            @Value("${spring.external.connect-timeout}")
+            long connectTimeout,
+            @Value("${spring.external.read-timeout}")
+            long readTimeout,
             IPaymentMapper paymentMapper,
             GatewayErrorMapper errorMapper
     ){
@@ -39,11 +43,11 @@ public class GatewayClient {
 
         HttpClient client = HttpClient.newBuilder()
                 .version(HttpClient.Version.HTTP_1_1)
-                .connectTimeout(Duration.ofSeconds(2))
+                .connectTimeout(Duration.ofMillis(connectTimeout))
                 .build();
 
         JdkClientHttpRequestFactory requestFactory = new JdkClientHttpRequestFactory(client);
-        requestFactory.setReadTimeout(Duration.ofSeconds(10));
+        requestFactory.setReadTimeout(Duration.ofMillis(readTimeout));
 
         this.restClient = RestClient.builder()
                 .baseUrl(gatewayUrl)

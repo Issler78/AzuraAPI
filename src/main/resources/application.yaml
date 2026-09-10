@@ -2,8 +2,11 @@ spring:
   application:
     name: azura-api
     api-key: ${API_KEY}
+  external:
     gateway-key: ${GATEWAY_KEY}
     gateway-url: "http://localhost:8090" # Be careful, check if the port is correct for localhost, or the uri if the fake gateway is up
+    connect-timeout: 2000 # 2s
+    read-timeout: 10000 # 10s
   datasource:
     url: jdbc:postgresql://localhost:5432/azura
     username: ${DB_USER}
