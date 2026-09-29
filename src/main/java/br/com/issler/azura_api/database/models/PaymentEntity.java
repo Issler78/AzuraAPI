@@ -25,6 +25,9 @@ public class PaymentEntity {
     @Column(name = "status", nullable = false)
     private PaymentStatusType status;
 
+    @Column(name = "failure_reason")
+    private String failureReason;
+
     @Column(name = "amount", nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
 

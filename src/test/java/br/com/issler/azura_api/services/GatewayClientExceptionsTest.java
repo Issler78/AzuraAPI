@@ -91,7 +91,7 @@ public class GatewayClientExceptionsTest {
     void returnServiceUnavailableException(){
         wireMock.stubFor(
                 post(urlEqualTo("/v1/payments")).willReturn(
-                        aResponse().withStatus(500)
+                        aResponse().withStatus(502)
                 )
         );
 
