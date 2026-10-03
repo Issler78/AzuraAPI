@@ -1,5 +1,6 @@
 package br.com.issler.azura_api.handlers;
 
+import br.com.issler.azura_api.clients.exceptions.GatewayServiceException;
 import br.com.issler.azura_api.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,26 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionsHandler {
+
+    @ExceptionHandler(GatewayServiceException.class)
+    public ResponseEntity<ErrorResponse> handleGatewayServiceException(GatewayServiceException e){
+        HttpStatus status = switch (e.getType()){
+            case CLIENT_ERROR -> HttpStatus.BAD_REQUEST;
+            case RATE_LIMITED -> HttpStatus.TOO_MANY_REQUESTS;
+            case READ_TIMEOUT,
+                 CONNECT_TIMEOUT,
+                 CONNECTION_FAILURE,
+                 SERVICE_UNAVAILABLE -> HttpStatus.BAD_GATEWAY;
+            case UNKNOWN -> HttpStatus.INTERNAL_SERVER_ERROR;
+        };
+
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .message(e.getMessage())
+                .status(status.value())
+                .build();
+
+        return ResponseEntity.status(status).body(errorResponse);
+    }
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ErrorResponse> handleBadRequestException(BadRequestException e) {
