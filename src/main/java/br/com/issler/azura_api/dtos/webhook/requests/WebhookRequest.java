@@ -10,8 +10,7 @@ public record WebhookRequest(
         @NotNull(message = "shouldn't be null")
         UUID gatewayPaymentId,
 
-        @NotNull(message = "shouldn't be null")
-        LocalDateTime paidAt, // on a real project, paidAt can be null (because, sometimes payment not is accepted). For study purposes, it always has a value
+        LocalDateTime paidAt,
 
         @NotNull(message = "shouldn't be null")
         PaymentStatusType status
