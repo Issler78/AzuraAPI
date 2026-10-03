@@ -7,6 +7,7 @@ import br.com.issler.azura_api.dtos.payment.requests.CreatePaymentDTO;
 import br.com.issler.azura_api.dtos.payment.responses.PaymentResponse;
 import br.com.issler.azura_api.enums.PaymentMethodType;
 import br.com.issler.azura_api.enums.PaymentStatusType;
+import br.com.issler.azura_api.utils.PaymentUpdater;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,14 +25,14 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class PaymentServiceTest {
-    @Mock
-    private IPaymentRepository paymentRepository;
-
     @InjectMocks
     private PaymentService paymentService;
 
     @Mock
     private GatewayClient gatewayClient;
+
+    @Mock
+    private PaymentUpdater paymentUpdater;
 
     @BeforeEach
     void setup(){
@@ -95,7 +96,7 @@ class PaymentServiceTest {
 
 
 
-        when(paymentRepository.save(any(PaymentEntity.class))).thenReturn(payment);
+        when(paymentUpdater.savePending(any(CreatePaymentDTO.class))).thenReturn(payment);
         when(gatewayClient.send(any(PaymentEntity.class), eq(user.getCpf()))).thenReturn(gatewayResponse);
 
         PaymentResponse response = paymentService.process(
@@ -107,7 +108,7 @@ class PaymentServiceTest {
         assertEquals(PaymentStatusType.ACCEPTED, response.status());
         assertNotNull(response.paidAt());
         verify(gatewayClient, times(1)).send(any(PaymentEntity.class), eq(user.getCpf()));
-        verify(paymentRepository, times(2)).save(any());
+        verify(paymentUpdater, times(1)).updateByResponse(any(PaymentEntity.class), any(PaymentResponse.class));
 
     }
 
@@ -167,7 +168,7 @@ class PaymentServiceTest {
 
 
 
-        when(paymentRepository.save(any(PaymentEntity.class))).thenReturn(payment);
+        when(paymentUpdater.savePending(any(CreatePaymentDTO.class))).thenReturn(payment);
         when(gatewayClient.send(any(PaymentEntity.class), eq(user.getCpf()))).thenReturn(gatewayResponse);
 
         PaymentResponse response = paymentService.process(
@@ -179,7 +180,7 @@ class PaymentServiceTest {
         assertEquals(PaymentStatusType.PENDING, response.status());
         assertNull(response.paidAt());
         verify(gatewayClient, times(1)).send(any(PaymentEntity.class), eq(user.getCpf()));
-        verify(paymentRepository, times(2)).save(any());
+        verify(paymentUpdater, times(1)).updateByResponse(any(PaymentEntity.class), any(PaymentResponse.class));
 
     }
 }

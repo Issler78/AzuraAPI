@@ -33,9 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles(profiles = "test")
-@Transactional
 class EnrollmentServiceIntegrationTest {
-
     @RegisterExtension
     static WireMockExtension wireMock = WireMockExtension.newInstance()
             .options(wireMockConfig().dynamicPort().containerThreads(10))
@@ -64,6 +62,15 @@ class EnrollmentServiceIntegrationTest {
     private ICourseRepository courseRepository;
     @Autowired
     private IUserRepository userRepository;
+
+    @BeforeEach
+    void setUp() {
+        paymentRepository.deleteAll();
+        enrollmentRepository.deleteAll();
+        courseRepository.deleteAll();
+        categoryRepository.deleteAll();
+        userRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("Should save enrollment and payment successfully with credit card payment method, passing through the payment gateway (mocked)")
