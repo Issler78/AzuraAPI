@@ -1,6 +1,7 @@
 package br.com.issler.azura_api.services;
 
 import br.com.issler.azura_api.clients.GatewayClient;
+import br.com.issler.azura_api.clients.exceptions.GatewayServiceException;
 import br.com.issler.azura_api.database.models.PaymentEntity;
 import br.com.issler.azura_api.database.repositories.IPaymentRepository;
 import br.com.issler.azura_api.dtos.payment.requests.CreatePaymentDTO;
@@ -9,6 +10,7 @@ import br.com.issler.azura_api.dtos.webhook.requests.WebhookRequest;
 import br.com.issler.azura_api.enums.EnrollmentStatusTypeEnum;
 import br.com.issler.azura_api.enums.PaymentStatusType;
 import br.com.issler.azura_api.exceptions.NotFoundException;
+import br.com.issler.azura_api.utils.PaymentUpdater;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,45 +20,23 @@ import org.springframework.transaction.annotation.Transactional;
 public class PaymentService {
     private final IPaymentRepository paymentRepository;
     private final GatewayClient gatewayClient;
+    private final PaymentUpdater paymentUpdater;
 
-    @Transactional
     public PaymentResponse process(CreatePaymentDTO createDTO, String payerCpf) {
-        // all operations in a single transaction, if the gateway fails, the payment will not be saved in the database (the same goes for if saved/updated failed)
+        // all transactions are created and commited (REQUIRES_NEW), so if the gateway fails, the payment is still saved in the database with status PENDING/FAILED, with the failure reason.
 
-        PaymentEntity payment = save(createDTO);
+        PaymentEntity payment = paymentUpdater.savePending(createDTO);
 
-        PaymentResponse response = gatewayClient.send(payment, payerCpf);
-        update(payment, response);
-
-        return response;
-    }
-
-    private PaymentEntity save(CreatePaymentDTO dto){
         try {
-            return paymentRepository.save(PaymentEntity.builder()
-                    .status(PaymentStatusType.PENDING)
-                    .amount(dto.amount())
-                    .paymentMethod(dto.paymentMethod())
-                    .enrollmentId(dto.enrollment())
-                    .build());
-        } catch (RuntimeException e) {
-            throw new RuntimeException("Error occurred while saving payment on database: " + e);
+            PaymentResponse response = gatewayClient.send(payment, payerCpf);
+            paymentUpdater.updateByResponse(payment, response);
+
+            return response;
+        } catch (GatewayServiceException e){
+            paymentUpdater.setAsFailed(payment, e.getType());
+            throw e;
         }
     }
-
-    private void update(PaymentEntity payment, PaymentResponse response){
-        payment.setGatewayPaymentId(response.gatewayPaymentId());
-        payment.setStatus(response.status());
-
-        if(response.status() == PaymentStatusType.ACCEPTED){
-            payment.setPaidAt(response.paidAt());
-            payment.getEnrollmentId().setStatus(EnrollmentStatusTypeEnum.ACTIVE);
-        }
-
-        paymentRepository.save(payment);
-    }
-
-
 
     @Transactional
     public void setAsPayed(WebhookRequest webhookRequest) throws NotFoundException {
