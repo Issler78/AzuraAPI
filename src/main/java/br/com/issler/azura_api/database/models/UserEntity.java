@@ -2,6 +2,8 @@ package br.com.issler.azura_api.database.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -28,7 +30,8 @@ public class UserEntity implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, unique = true, columnDefinition = "CHAR(11)")
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(nullable = false, unique = true, length = 11)
     private String cpf;
 
 

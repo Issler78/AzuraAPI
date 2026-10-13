@@ -29,6 +29,7 @@ public class EnrollmentEntity {
 
     @Builder.Default
     @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
     private EnrollmentStatusTypeEnum status = EnrollmentStatusTypeEnum.PENDING_PAYMENT;
 
     @Column(name = "status_updated_at")

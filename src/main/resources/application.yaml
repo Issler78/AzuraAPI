@@ -11,9 +11,12 @@ spring:
     url: jdbc:postgresql://localhost:5432/azura
     username: ${DB_USER}
     password: ${DB_PASSWORD}
+  flyway:
+    enabled: true
+    locations: classpath:db/migrations
   jpa:
     hibernate:
-      ddl-auto: update # Use 'update' for development, 'validate' for production
+      ddl-auto: validate # Use 'update' for development, 'validate' for production
     show-sql: true
     properties:
       hibernate:
