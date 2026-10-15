@@ -10,7 +10,12 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "payments")
+@Table(
+        name = "payments",
+        indexes = {
+                @Index(name = "idx_payment_idempotency_key", columnList = "idempotency_key", unique = true)
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -38,6 +43,9 @@ public class PaymentEntity {
     @OneToOne
     @JoinColumn(name = "enrollment_id", unique = true, nullable = false)
     private EnrollmentEntity enrollmentId;
+
+    @Column(name = "idempotency_key", nullable = false)
+    private UUID idempotencyKey;
 
     @Column(name = "gateway_payment_id", unique = true)
     private UUID gatewayPaymentId;
