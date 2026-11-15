@@ -2,6 +2,7 @@ package br.com.issler.azura_api.services;
 
 import br.com.issler.azura_api.database.models.CourseEntity;
 import br.com.issler.azura_api.database.models.EnrollmentEntity;
+import br.com.issler.azura_api.database.models.PaymentEntity;
 import br.com.issler.azura_api.database.models.UserEntity;
 import br.com.issler.azura_api.database.repositories.IEnrollmentRepository;
 import br.com.issler.azura_api.dtos.enrollment.requests.CreateEnrollmentDTO;
@@ -10,6 +11,7 @@ import br.com.issler.azura_api.dtos.enrollment.responses.EnrollmentCreateResult;
 import br.com.issler.azura_api.dtos.payment.responses.PaymentResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
@@ -42,7 +44,9 @@ public class EnrollmentService {
                 .enrollment(enrollment)
                 .build();
 
-        PaymentResponse paymentResponse = paymentService.process(createPaymentDTO, user.getCpf());
+        PaymentEntity payment = paymentService.process(createPaymentDTO);
+        PaymentResponse paymentResponse = paymentService.sendToGatewayClient(payment, user.getCpf());
+
 
 
         // return the enrollment and payment response together to be has possible create the response on controller

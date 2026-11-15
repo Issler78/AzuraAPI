@@ -8,6 +8,7 @@ import br.com.issler.azura_api.dtos.payment.responses.PaymentResponse;
 import br.com.issler.azura_api.clients.exceptions.GatewayUnexpectedResponseException;
 import br.com.issler.azura_api.mappers.IPaymentMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.JdkClientHttpRequestFactory;
@@ -17,6 +18,8 @@ import org.springframework.web.client.RestClient;
 
 import java.net.http.HttpClient;
 import java.time.Duration;
+import java.util.UUID;
+import java.util.function.Consumer;
 
 @Component
 public class GatewayClient {
@@ -55,7 +58,7 @@ public class GatewayClient {
                 .build();
     }
 
-    public PaymentResponse send(PaymentEntity payment, String payerCpf){
+    public PaymentResponse send(PaymentEntity payment, String payerCpf, UUID idempotencyKey) {
         // gatewayPaymentResponse and paymentResponse are the same, but we need to map them because the gateway response has a different name for the fields in the future
         GatewayRequestBody gatewayRequestBody = GatewayRequestBody.builder()
                 .amount(payment.getAmount())
@@ -64,10 +67,15 @@ public class GatewayClient {
                 .build();
 
         try {
+            Consumer<HttpHeaders> headersConsumer = headers -> {
+                headers.setContentType(MediaType.APPLICATION_JSON);
+                headers.set("X-API-KEY", gatewayKey);
+                headers.set("Idempotency-Key", idempotencyKey.toString());
+            };
+
             GatewayPaymentResponse result = restClient.post()
                     .uri("/v1/payments")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .header("X-API-KEY", gatewayKey)
+                    .headers(headersConsumer)
                     .body(gatewayRequestBody)
                     .retrieve()
                     .onStatus(HttpStatusCode::isError, (request, response) -> {

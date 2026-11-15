@@ -12,18 +12,21 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @RequiredArgsConstructor
 @Component
 public class PaymentUpdater {
     private final IPaymentRepository paymentRepository;
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public PaymentEntity savePending(CreatePaymentDTO dto){
+    public PaymentEntity savePending(CreatePaymentDTO dto, UUID idempotencyKey){
         return paymentRepository.save(PaymentEntity.builder()
                 .status(PaymentStatusType.PENDING)
                 .amount(dto.amount())
                 .paymentMethod(dto.paymentMethod())
                 .enrollmentId(dto.enrollment())
+                .idempotencyKey(idempotencyKey)
                 .build());
     }
 
