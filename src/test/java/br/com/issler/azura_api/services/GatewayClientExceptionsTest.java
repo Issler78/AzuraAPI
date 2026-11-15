@@ -15,6 +15,8 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -48,7 +50,7 @@ public class GatewayClientExceptionsTest {
         );
 
         GatewayServiceException exception = assertThrows(GatewayServiceException.class, () -> {
-            gatewayClient.send(new PaymentEntity(), "00000000000");
+            gatewayClient.send(new PaymentEntity(), "00000000000", UUID.randomUUID());
         });
 
         assertEquals(GatewayErrorType.READ_TIMEOUT, exception.getType());
@@ -64,7 +66,7 @@ public class GatewayClientExceptionsTest {
         );
 
         GatewayServiceException exception = assertThrows(GatewayServiceException.class, () -> {
-            gatewayClient.send(new PaymentEntity(), "00000000000");
+            gatewayClient.send(new PaymentEntity(), "00000000000", UUID.randomUUID());
         });
 
         assertEquals(GatewayErrorType.RATE_LIMITED, exception.getType());
@@ -80,7 +82,7 @@ public class GatewayClientExceptionsTest {
         );
 
         GatewayServiceException exception = assertThrows(GatewayServiceException.class, () -> {
-            gatewayClient.send(new PaymentEntity(), "00000000000");
+            gatewayClient.send(new PaymentEntity(), "00000000000", UUID.randomUUID());
         });
 
         assertEquals(GatewayErrorType.CLIENT_ERROR, exception.getType());
@@ -96,7 +98,7 @@ public class GatewayClientExceptionsTest {
         );
 
         GatewayServiceException exception = assertThrows(GatewayServiceException.class, () -> {
-            gatewayClient.send(new PaymentEntity(), "00000000000");
+            gatewayClient.send(new PaymentEntity(), "00000000000", UUID.randomUUID());
         });
 
         assertEquals(GatewayErrorType.SERVICE_UNAVAILABLE, exception.getType());

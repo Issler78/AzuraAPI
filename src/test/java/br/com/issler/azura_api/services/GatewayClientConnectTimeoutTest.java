@@ -13,6 +13,8 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -33,7 +35,7 @@ public class GatewayClientConnectTimeoutTest {
     @DisplayName("Should return connect timeout exception")
     void returnConnectTimeoutException(){
         GatewayServiceException exception = assertThrows(GatewayServiceException.class, () -> {
-            gatewayClient.send(new PaymentEntity(), "00000000000");
+            gatewayClient.send(new PaymentEntity(), "00000000000", UUID.randomUUID());
         });
 
         assertEquals(GatewayErrorType.CONNECT_TIMEOUT, exception.getType());

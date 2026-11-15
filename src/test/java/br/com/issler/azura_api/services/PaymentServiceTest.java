@@ -7,6 +7,7 @@ import br.com.issler.azura_api.dtos.payment.requests.CreatePaymentDTO;
 import br.com.issler.azura_api.dtos.payment.responses.PaymentResponse;
 import br.com.issler.azura_api.enums.PaymentMethodType;
 import br.com.issler.azura_api.enums.PaymentStatusType;
+import br.com.issler.azura_api.security.IdempotencyKeyProvider;
 import br.com.issler.azura_api.utils.PaymentUpdater;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -34,6 +35,9 @@ class PaymentServiceTest {
     @Mock
     private PaymentUpdater paymentUpdater;
 
+    @Mock
+    private IdempotencyKeyProvider idempotencyKeyProvider;
+
     @BeforeEach
     void setup(){
         MockitoAnnotations.openMocks(this);
@@ -54,7 +58,7 @@ class PaymentServiceTest {
                 .category(category)
                 .build();
         UserEntity user = UserEntity.builder()
-                .id(new UUID(0L, 1L))
+                .id(UUID.randomUUID())
                 .name("Test User")
                 .email("test@example.com")
                 .password("password")
@@ -62,7 +66,7 @@ class PaymentServiceTest {
                 .build();
 
         EnrollmentEntity enrollment = EnrollmentEntity.builder()
-                .id(new UUID(0L, 1L))
+                .id(UUID.randomUUID())
                 .enrollmentDate(LocalDate.now())
                 .price(new BigDecimal("100.00"))
                 .user(user)
@@ -78,17 +82,18 @@ class PaymentServiceTest {
                 .build();
 
         PaymentEntity payment = PaymentEntity.builder()
-                .id(new UUID(0L, 1L))
+                .id(UUID.randomUUID())
                 .status(PaymentStatusType.PENDING)
                 .amount(createPaymentDTO.amount())
                 .paymentMethod(createPaymentDTO.paymentMethod())
                 .enrollmentId(enrollment)
+                .idempotencyKey(UUID.randomUUID())
                 .build();
 
 
 
         PaymentResponse gatewayResponse = PaymentResponse.builder()
-                .gatewayPaymentId(new UUID(0L, 1L))
+                .gatewayPaymentId(UUID.randomUUID())
                 .status(PaymentStatusType.ACCEPTED)
                 .paymentMethod(PaymentMethodType.CREDIT_CARD)
                 .paidAt(LocalDateTime.now())
@@ -96,18 +101,19 @@ class PaymentServiceTest {
 
 
 
-        when(paymentUpdater.savePending(any(CreatePaymentDTO.class))).thenReturn(payment);
-        when(gatewayClient.send(any(PaymentEntity.class), eq(user.getCpf()))).thenReturn(gatewayResponse);
+        when(idempotencyKeyProvider.generate()).thenReturn(UUID.randomUUID());
+        when(paymentUpdater.savePending(any(CreatePaymentDTO.class), any(UUID.class))).thenReturn(payment);
+        when(gatewayClient.send(any(PaymentEntity.class), eq(user.getCpf()), any(UUID.class))).thenReturn(gatewayResponse);
 
-        PaymentResponse response = paymentService.process(
-                createPaymentDTO,
-                user.getCpf()
+        PaymentEntity paymentResult = paymentService.process(
+                createPaymentDTO
         );
+        PaymentResponse response = paymentService.sendToGatewayClient(paymentResult, user.getCpf());
 
         assertNotNull(response);
         assertEquals(PaymentStatusType.ACCEPTED, response.status());
         assertNotNull(response.paidAt());
-        verify(gatewayClient, times(1)).send(any(PaymentEntity.class), eq(user.getCpf()));
+        verify(gatewayClient, times(1)).send(any(PaymentEntity.class), eq(user.getCpf()), any(UUID.class));
         verify(paymentUpdater, times(1)).updateByResponse(any(PaymentEntity.class), any(PaymentResponse.class));
 
     }
@@ -127,7 +133,7 @@ class PaymentServiceTest {
                 .category(category)
                 .build();
         UserEntity user = UserEntity.builder()
-                .id(new UUID(0L, 1L))
+                .id(UUID.randomUUID())
                 .name("Test User")
                 .email("test@example.com")
                 .password("password")
@@ -135,7 +141,7 @@ class PaymentServiceTest {
                 .build();
 
         EnrollmentEntity enrollment = EnrollmentEntity.builder()
-                .id(new UUID(0L, 1L))
+                .id(UUID.randomUUID())
                 .enrollmentDate(LocalDate.now())
                 .price(new BigDecimal("100.00"))
                 .user(user)
@@ -151,35 +157,39 @@ class PaymentServiceTest {
                 .build();
 
         PaymentEntity payment = PaymentEntity.builder()
-                .id(new UUID(0L, 1L))
+                .id(UUID.randomUUID())
                 .status(PaymentStatusType.PENDING)
                 .amount(createPaymentDTO.amount())
                 .paymentMethod(createPaymentDTO.paymentMethod())
                 .enrollmentId(enrollment)
+                .idempotencyKey(UUID.randomUUID())
                 .build();
 
 
 
         PaymentResponse gatewayResponse = PaymentResponse.builder()
-                .gatewayPaymentId(new UUID(0L, 1L))
+                .gatewayPaymentId(UUID.randomUUID())
                 .status(PaymentStatusType.PENDING)
                 .paymentMethod(PaymentMethodType.PIX)
+                .paidAt(null)
                 .build();
 
 
 
-        when(paymentUpdater.savePending(any(CreatePaymentDTO.class))).thenReturn(payment);
-        when(gatewayClient.send(any(PaymentEntity.class), eq(user.getCpf()))).thenReturn(gatewayResponse);
+        when(idempotencyKeyProvider.generate()).thenReturn(UUID.randomUUID());
+        when(paymentUpdater.savePending(any(CreatePaymentDTO.class), any(UUID.class))).thenReturn(payment);
+        when(gatewayClient.send(any(PaymentEntity.class), eq(user.getCpf()), any(UUID.class))).thenReturn(gatewayResponse);
 
-        PaymentResponse response = paymentService.process(
-                createPaymentDTO,
-                user.getCpf()
+        PaymentEntity paymentResult = paymentService.process(
+                createPaymentDTO
         );
+
+        PaymentResponse response = paymentService.sendToGatewayClient(paymentResult, user.getCpf());
 
         assertNotNull(response);
         assertEquals(PaymentStatusType.PENDING, response.status());
         assertNull(response.paidAt());
-        verify(gatewayClient, times(1)).send(any(PaymentEntity.class), eq(user.getCpf()));
+        verify(gatewayClient, times(1)).send(any(PaymentEntity.class), eq(user.getCpf()), any(UUID.class));
         verify(paymentUpdater, times(1)).updateByResponse(any(PaymentEntity.class), any(PaymentResponse.class));
 
     }

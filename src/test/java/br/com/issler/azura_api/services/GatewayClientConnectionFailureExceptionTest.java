@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -42,7 +43,7 @@ public class GatewayClientConnectionFailureExceptionTest {
     @DisplayName("Should return connection failure exception")
     void returnConnectionFailureException(){
         GatewayServiceException exception = assertThrows(GatewayServiceException.class, () -> {
-            gatewayClient.send(new PaymentEntity(), "00000000000");
+            gatewayClient.send(new PaymentEntity(), "00000000000", UUID.randomUUID());
         });
 
         assertEquals(GatewayErrorType.CONNECTION_FAILURE, exception.getType());

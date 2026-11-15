@@ -1,6 +1,9 @@
 spring:
   application:
     api-key: test-api-key
+    admin-name: "Admin"
+    admin-email: "testadmin@gmail.com"
+    admin-password: "testadminpass123"
   external:
     gateway-key: test-gateway-key
     gateway-url: undefined # it should be replaced with the actual URL of the gateway service when running tests.

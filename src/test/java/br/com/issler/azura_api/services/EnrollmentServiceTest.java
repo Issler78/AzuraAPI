@@ -91,12 +91,12 @@ class EnrollmentServiceTest {
 
         when(courseService.getById(1L)).thenReturn(course);
         when(enrollmentRepository.save(enrollment)).thenReturn(enrollment);
-        when(paymentService.process(createPaymentDTO, user.getCpf())).thenReturn(null);
+        when(paymentService.process(createPaymentDTO)).thenReturn(null);
 
         enrollmentService.save(dto, user);
 
         verify(courseService, times(1)).getById(1L);
         verify(enrollmentRepository, times(1)).save(any(EnrollmentEntity.class));
-        verify(paymentService, times(1)).process(any(CreatePaymentDTO.class), anyString());
+        verify(paymentService, times(1)).process(any(CreatePaymentDTO.class));
     }
 }

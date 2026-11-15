@@ -1,5 +1,6 @@
 package br.com.issler.azura_api.services;
 
+import br.com.issler.azura_api.clients.exceptions.GatewayServiceException;
 import br.com.issler.azura_api.database.models.CategoryEntity;
 import br.com.issler.azura_api.database.models.CourseEntity;
 import br.com.issler.azura_api.database.models.PaymentEntity;
@@ -63,8 +64,8 @@ class EnrollmentServiceIntegrationTest {
     @Autowired
     private IUserRepository userRepository;
 
-    @BeforeEach
-    void setUp() {
+    @AfterEach
+    void cleanup() {
         paymentRepository.deleteAll();
         enrollmentRepository.deleteAll();
         courseRepository.deleteAll();
@@ -98,7 +99,7 @@ class EnrollmentServiceIntegrationTest {
 
         // configure wire mock when call the gateway
         GatewayPaymentResponse response = GatewayPaymentResponse.builder()
-                .gatewayPaymentId(new UUID(1L, 2L))
+                .gatewayPaymentId(UUID.randomUUID())
                 .amount(new BigDecimal("100.00"))
                 .status(PaymentStatusType.ACCEPTED)
                 .paymentMethod(PaymentMethodType.CREDIT_CARD)
@@ -154,7 +155,7 @@ class EnrollmentServiceIntegrationTest {
 
         // configure wire mock when call the gateway
         GatewayPaymentResponse response = GatewayPaymentResponse.builder()
-                .gatewayPaymentId(new UUID(1L, 2L))
+                .gatewayPaymentId(UUID.randomUUID())
                 .amount(new BigDecimal("100.00"))
                 .status(PaymentStatusType.PENDING)
                 .paymentMethod(PaymentMethodType.PIX)
@@ -182,5 +183,57 @@ class EnrollmentServiceIntegrationTest {
         assertNotNull(payment);
         assertEquals(response.gatewayPaymentId(), payment.getGatewayPaymentId());
         assertNotNull(paymentResponse);
+    }
+
+    @Test
+    @DisplayName("Should throw exception when trying to save enrollment and the gateway return an error 500")
+    void saveCaseGatewayError() throws Exception {
+        // configure bd with fake data
+        CategoryEntity category = categoryRepository.save(CategoryEntity.builder()
+                .name("Test Category")
+                .build());
+
+        CourseEntity course = courseRepository.save(CourseEntity.builder()
+                .title("Test Course")
+                .description("Test Description")
+                .price(new BigDecimal("100.00"))
+                .category(category)
+                .build());
+
+        UserEntity user = userRepository.save(UserEntity.builder()
+                .name("Test User")
+                .email("test@example.com")
+                .password("testpassword")
+                .cpf("12345678900")
+                .build());
+
+
+        // configure wire mock when call the gateway to return an error 500
+        wireMock.stubFor(
+                post(urlEqualTo("/v1/payments")).willReturn(aResponse().withStatus(500))
+        );
+
+
+
+        CreateEnrollmentDTO dto = CreateEnrollmentDTO.builder()
+                .courseId(course.getId())
+                .paymentMethod(PaymentMethodType.CREDIT_CARD)
+                .build();
+
+        assertThrows(GatewayServiceException.class, () -> enrollmentService.save(dto, user));
+
+
+
+        assertEquals(1, enrollmentRepository.count());
+
+        wireMock.verify(postRequestedFor(urlEqualTo("/v1/payments")));
+        assertEquals(1, paymentRepository.count());
+
+        PaymentEntity payment = paymentRepository.findAll().getFirst();
+        assertNotNull(payment);
+        assertEquals(PaymentStatusType.FAILED, payment.getStatus());
+
+        assertNotNull(payment.getFailureReason());
+        assertNull(payment.getGatewayPaymentId());
     }
 }
